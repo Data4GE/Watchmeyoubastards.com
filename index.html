@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Trick the Troll</title>
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0;background:#000;color:white;font-family:Arial,Helvetica,sans-serif;overflow:hidden}.intro,.reveal{position:fixed;inset:0;display:grid;place-items:center}.intro{z-index:2;background:#000;transition:opacity .8s ease,visibility .8s ease}.intro img{width:min(92vw,850px);max-height:88vh;object-fit:contain;filter:drop-shadow(0 0 18px rgba(20,0,180,.25));animation:appear .8s ease-out both}.intro.hide{opacity:0;visibility:hidden;pointer-events:none}@keyframes appear{from{opacity:0;transform:scale(.93)}to{opacity:1;transform:scale(1)}}.reveal{opacity:0;transition:opacity .8s ease}.reveal.show{opacity:1}.player{width:min(95vw,1100px);aspect-ratio:16/9;position:relative;background:#080808;box-shadow:0 0 55px rgba(20,0,180,.35)}iframe{border:0;width:100%;height:100%}.fallback{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:20px;background:#080808;text-align:center;padding:20px}.fallback h1{font-size:clamp(24px,5vw,48px);margin:0}.fallback p{margin:0;color:#bbb}button{cursor:pointer;background:#1000b5;color:#fff;border:2px solid white;border-radius:8px;padding:16px 28px;font-size:18px;font-weight:bold}button:hover{background:#3025e8}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<section class="intro" id="intro" aria-label="Trick the Troll logo"><img src="logo.png" alt="Trick the Troll"></section>
+<section class="reveal" id="reveal" aria-label="Surprise video">
+<div class="player" id="player"><div class="fallback" id="fallback"><h1>YOU'VE BEEN TROLLED!</h1><p>Ready for your surprise?</p><button id="play">▶ Play the surprise</button></div></div>
+</section>
+<script>
+const videoId='dQw4w9WgXcQ';
+const intro=document.getElementById('intro');
+const reveal=document.getElementById('reveal');
+const player=document.getElementById('player');
+const fallback=document.getElementById('fallback');
+function showVideo(muted){
+ const iframe=document.createElement('iframe');
+ iframe.title='Never Gonna Give You Up — Rick Astley';
+ iframe.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+ iframe.referrerPolicy='strict-origin-when-cross-origin';
+ iframe.allowFullscreen=true;
+ iframe.src=`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=${muted?1:0}&playsinline=1&rel=0`;
+ fallback.classList.add('hidden');
+ player.appendChild(iframe);
+}
+document.getElementById('play').addEventListener('click',()=>showVideo(false));
+setTimeout(()=>{
+ intro.classList.add('hide');reveal.classList.add('show');
+ // Autoplay muted is more widely allowed; a click is needed for sound on many browsers.
+ showVideo(true);
+ // Visible button to switch to sound without relying on YouTube's controls.
+ const sound=document.createElement('button');sound.textContent='🔊 Turn on sound';
+ sound.style.cssText='position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:3';
+ sound.addEventListener('click',()=>{player.querySelector('iframe')?.remove();showVideo(false);sound.remove()});
+ document.body.appendChild(sound);
+},4000);
+</script>
+</body>
+</html>
